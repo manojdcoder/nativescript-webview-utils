@@ -1,0 +1,15 @@
+<Page navigatingTo="onNavigatingTo"
+    xmlns="http://schemas.nativescript.org/tns.xsd">
+
+    <ActionBar>
+        <Label text="Home"></Label>
+    </ActionBar>
+
+    <GridLayout rows="auto,*">
+        <StackLayout row="0">
+            <Button text="Get HTML" tap="onGetHtmlButtonClick"></Button>
+            <Button text="jQuery" tap="onjQueryButtonClick"></Button>
+        </StackLayout>
+        <WebView row="1" id="webView" src="{{ html }}" loadFinished="onLoadFinished"></WebView>
+    </GridLayout>
+</Page>

@@ -1,0 +1,11 @@
+/* Include.gradle configuration: http://docs.nativescript.org/plugins/plugins#includegradle-specification */
+
+android {
+	
+}
+
+dependencies {
+  implementation('org.apache.commons:commons-text:1.9') {
+    exclude group: 'com.google.android', module: 'android'
+  }
+}
