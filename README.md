@@ -63,6 +63,13 @@ android {
 | getHtml():Promise                         | Returns a promise with HTML string of current page loaded in WebView             |
 | evaluateJavaScript(value:string):Promise  | Execute JavaScript as a string in the WebView context, returns the result if any |
 
+## Events
+
+| Event                               | Description                                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| openWindow(event: WindowEventData)  | Fired on WebView when a new window is requested. Set `event.cancel` to `true` to prevent opening new WebView. |
+| closeWindow(event: WindowEventData) | Fired on WebView upon request to close. Set `event.cancel` to `true` to prevent closing the WebView.          |
+
 **Note:** Unset the callback function (`onPageReady(null)`) before you close the active Page or when you are done with WebView to avoid memory leaks.
 
 ## License

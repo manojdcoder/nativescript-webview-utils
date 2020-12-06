@@ -9,7 +9,8 @@
         <StackLayout row="0">
             <Button text="Get HTML" tap="onGetHtmlButtonClick"></Button>
             <Button text="jQuery" tap="onjQueryButtonClick"></Button>
+            <Button text="Window" tap="onWindowButtonClick"></Button>
         </StackLayout>
-        <WebView row="1" id="webView" src="{{ html }}" loadFinished="onLoadFinished"></WebView>
+        <WebView row="1" id="webView" src="{{ html }}" loadFinished="onLoadFinished" openWindow="onOpenWindow" closeWindow="onCloseWindow"></WebView>
     </GridLayout>
 </Page>
