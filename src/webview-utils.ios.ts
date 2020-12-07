@@ -1,6 +1,7 @@
 import { getJQuery } from "./webview-utils.common";
-import { View } from "@nativescript/core/ui/core/view";
 import { WebView } from "@nativescript/core/ui/web-view";
+
+export * from "./webview-utils.common";
 
 export class PluginWKNavigationDelegateImpl
   extends NSObject
@@ -18,9 +19,9 @@ export class PluginWKNavigationDelegateImpl
   }
 
   webViewDecidePolicyForNavigationActionDecisionHandler(
-    webView,
-    navigationAction,
-    decisionHandler
+    webView: WKWebView,
+    navigationAction: WKNavigationAction,
+    decisionHandler: any
   ) {
     this._origDelegate.webViewDecidePolicyForNavigationActionDecisionHandler(
       webView,
@@ -140,8 +141,8 @@ function createNativeView(
 }
 
 WebView.prototype.createNativeView = function () {
-  const nativeView = this.newWebView || createNativeView();
-  this.newWebView = null;
+  const nativeView = this.wkWebView || createNativeView();
+  nativeView.wkWebView = null;
   return nativeView;
 };
 
@@ -173,12 +174,8 @@ WebView.prototype._onCreateNativeWindow = function (
   newWebView: WebView,
   params: any
 ): WKWebView {
-  const { configuration, navigationAction } = params;
+  const { configuration } = params;
   const wkWebView: WKWebView = createNativeView(configuration);
-  newWebView.once(View.loadedEvent, () => {
-    const nativeView = newWebView.nativeViewProtected;
-    nativeView.loadRequest(navigationAction.request);
-  });
   newWebView.wkWebView = wkWebView;
   return wkWebView;
 };

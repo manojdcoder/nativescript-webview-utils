@@ -1,0 +1,4 @@
+<GridLayout xmlns="http://schemas.nativescript.org/tns.xsd" rows="auto,auto" backgroundColor="#fff">
+    <Label android:marginTop="40" row="0" text="{{ url }}" />
+    <Button row="1" text="Click to close" tap="{{ close }}" />
+</GridLayout>

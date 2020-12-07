@@ -1,6 +1,6 @@
 # nativescript-webview-utils
 
-Extends the NativeScript WebView for addtional features
+Extends the NativeScript WebView for additional features
 
 ## Installation
 
@@ -65,10 +65,11 @@ android {
 
 ## Events
 
-| Event                               | Description                                                                                                   |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| openWindow(event: WindowEventData)  | Fired on WebView when a new window is requested. Set `event.cancel` to `true` to prevent opening new WebView. |
-| closeWindow(event: WindowEventData) | Fired on WebView upon request to close. Set `event.cancel` to `true` to prevent closing the WebView.          |
+| Event                                  | Description                                                                                                   |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| windowOpen(event: WindowEventData)     | Fired on WebView when a new window is requested. Set `event.cancel` to `true` to prevent opening new WebView. |
+| windowOpened(event: WindowedEventData) | Fired on WebView after opening new window, this is where you may customize the modal window.                  |
+| windowClosed(event: EventData)         | Fired on WebView after closing the window.                                                                    |
 
 **Note:** Unset the callback function (`onPageReady(null)`) before you close the active Page or when you are done with WebView to avoid memory leaks.
 

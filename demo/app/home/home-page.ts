@@ -1,9 +1,11 @@
 import { EventData } from "@nativescript/core/data/observable";
 import { View } from "@nativescript/core/ui/core/view";
+import { Builder } from "@nativescript/core/ui/builder";
 import { NavigatedData, Page } from "@nativescript/core/ui/page";
 import { WebView, LoadEventData } from "@nativescript/core/ui/web-view";
-import { WindowEventData } from "nativescript-webview-utils";
+import { WindowEventData, WindowedEventData } from "nativescript-webview-utils";
 
+import { WebViewControlsModel } from "../web-view-controls/web-view-controls-model";
 import { HomeViewModel } from "./home-view-model";
 
 export function onNavigatingTo(args: NavigatedData) {
@@ -21,7 +23,7 @@ export function onNavigatingTo(args: NavigatedData) {
 }
 
 export function onLoadFinished(args: LoadEventData) {
-    console.log(args.eventName);
+    console.log(args.eventName + " = " + args.url);
 }
 
 export function onjQueryButtonClick(args: EventData) {
@@ -75,10 +77,27 @@ export function onWindowButtonClick(args: EventData) {
     );
 }
 
-export function onOpenWindow(args: WindowEventData) {
+export function onWindowOpen(args: WindowEventData) {
     console.log("Opening window...");
 }
 
-export function onCloseWindow(args: WindowEventData) {
-    console.log("Closing window...");
+export function onWindowOpened(args: WindowedEventData) {
+    console.log("Opened window...");
+    const { webView, modalView } = args;
+
+    // Modify modal view
+    modalView.removeChild(modalView.getViewById("btnClose"));
+    const bindingContext = new WebViewControlsModel(webView);
+    const view = Builder.load({
+        path: "~/web-view-controls",
+        name: "web-view-controls",
+        attributes: {
+            bindingContext,
+        },
+    });
+    modalView.addChildAtCell(view, 0, 1);
+}
+
+export function onWindowClosed(args: WindowEventData) {
+    console.log("Closed window...");
 }

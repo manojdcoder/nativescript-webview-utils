@@ -1,4 +1,5 @@
 import { isAndroid } from "@nativescript/core/platform";
+import { EventData } from "@nativescript/core/data/observable";
 import { Color } from "@nativescript/core/color";
 import { View } from "@nativescript/core/ui/core/view";
 import {
@@ -16,8 +17,16 @@ export interface WindowEventData {
   params: any;
 }
 
-export const openWindowEvent = "openWindow";
-export const closeWindowEvent = "closeWindow";
+export interface WindowedEventData {
+  eventName: string;
+  object: WebView;
+  modalView: GridLayout;
+  webView: WebView;
+}
+
+export const windowOpenEvent = "windowOpen";
+export const windowOpenedEvent = "windowOpened";
+export const windowClosedEvent = "windowClosed";
 
 export function getJQuery() {
   return knownFolders
@@ -27,8 +36,9 @@ export function getJQuery() {
     .readTextSync();
 }
 
-(WebView as any).openWindowEvent = openWindowEvent;
-(WebView as any).closeWindowEvent = closeWindowEvent;
+(WebView as any).windowOpenEvent = windowOpenEvent;
+(WebView as any).windowOpenedEvent = windowOpenedEvent;
+(WebView as any).windowClosedEvent = windowClosedEvent;
 
 WebView.prototype.jsGetHtml = "document.documentElement.outerHTML.toString()";
 
@@ -57,7 +67,7 @@ WebView.prototype._onCreateWindow = function (
   params: any
 ): boolean | WKWebView {
   const args: WindowEventData = {
-    eventName: openWindowEvent,
+    eventName: windowOpenEvent,
     object: this,
     cancel: false,
     params,
@@ -74,17 +84,30 @@ WebView.prototype._onCreateWindow = function (
   modalView.addRow(new ItemSpec(1, "star"));
   modalView.addColumn(new ItemSpec(1, "star"));
 
+  const newWebView = new WebView();
+  newWebView.modalView = modalView;
+  const returnValue = this._onCreateNativeWindow(newWebView, params);
+  modalView.addChildAtCell(newWebView, 1, 0);
+
   const closeButton = new Button();
+  closeButton.id = "btnClose";
   closeButton.marginTop = isAndroid ? 40 : 0;
   closeButton.backgroundColor = new Color("transparent");
   closeButton.borderColor = new Color("transparent");
   closeButton.color = new Color("#fff");
   closeButton.text = "Close";
-  closeButton.once(Button.tapEvent, () => modalView.closeModal());
+  closeButton.once(Button.tapEvent, () => newWebView._onCloseWindow());
   modalView.addChildAtCell(closeButton, 0, 0);
 
-  const newWebView = new WebView();
-  modalView.addChildAtCell(newWebView, 1, 0);
+  modalView.once(View.shownModallyEvent, () => {
+    const args: WindowedEventData = {
+      eventName: windowOpenedEvent,
+      object: this,
+      modalView,
+      webView: newWebView,
+    };
+    this.notify(args);
+  });
 
   this.showModal(modalView, {
     context: {},
@@ -93,24 +116,23 @@ WebView.prototype._onCreateWindow = function (
     cancelable: false,
   });
 
-  return this._onCreateNativeWindow(newWebView, params);
+  return returnValue;
 };
 
-WebView.prototype._onCloseWindow = function (params: any) {
-  const args: WindowEventData = {
-    eventName: closeWindowEvent,
-    object: this,
-    cancel: false,
-    params,
-  };
-  this.notify(args);
+WebView.prototype._onCloseWindow = function (params?: any) {
+  const modalView: GridLayout = this.modalView;
 
-  if (args.cancel) {
-    return false;
+  if (modalView) {
+    modalView.removeChildren();
+    modalView.closeModal();
+    this.modalView = null;
+
+    const args: EventData = {
+      eventName: windowClosedEvent,
+      object: this,
+    };
+    this.notify(args);
   }
-
-  const parent: View = this.parent;
-  parent.closeModal();
 
   return true;
 };

@@ -1,6 +1,7 @@
-import "./webview-utils.common";
 import { View } from "@nativescript/core/ui/core/view";
 import { WebView } from "@nativescript/core/ui/web-view";
+
+export * from "./webview-utils.common";
 
 let WebChromeClient;
 

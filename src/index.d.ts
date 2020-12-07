@@ -1,6 +1,7 @@
 declare module "@nativescript/core/ui/web-view" {
   interface WebView {
     private jsGetHtml: string;
+    private modalView: any;
     private wkWebView: any;
     private pageReadyCallback: (error?: any) => void;
     private original_createNativeView();
@@ -11,7 +12,7 @@ declare module "@nativescript/core/ui/web-view" {
     private _onCreateWindow(params: any): any;
     private _onCreateNativeWindow(newWebView: WebView, params: any): any;
     private _onCancelNativeWindow(params: any): any;
-    private _onCloseWindow(params: any): boolean;
+    _onCloseWindow(params?: any): boolean;
     onPageReady(callback: (error?: any) => void);
     evaluateJavaScript(value: string): Promise<any>;
     getHtml(): Promise<string>;
