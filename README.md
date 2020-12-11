@@ -57,13 +57,15 @@ android {
 
 ## API
 
+| Property    | Description                               |
+| ----------- | ----------------------------------------- |
+| previewLink | Enable / disable link preview (iOS only). |
+
 | Function                                  | Description                                                                      |
 | ----------------------------------------- | -------------------------------------------------------------------------------- |
 | onPageReady(callback: (error?:any)=>void) | Callback function to be invoked when page is loaded and jQuery is added to page. |
 | getHtml():Promise                         | Returns a promise with HTML string of current page loaded in WebView             |
 | evaluateJavaScript(value:string):Promise  | Execute JavaScript as a string in the WebView context, returns the result if any |
-
-## Events
 
 | Event                                  | Description                                                                                                   |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------- |

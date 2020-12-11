@@ -84,6 +84,7 @@ export function onWindowOpen(args: WindowEventData) {
 export function onWindowOpened(args: WindowedEventData) {
     console.log("Opened window...");
     const { webView, modalView } = args;
+    webView.previewLink = false;
 
     // Modify modal view
     modalView.removeChild(modalView.getViewById("btnClose"));

@@ -1,6 +1,8 @@
-import { isAndroid } from "@nativescript/core/platform";
+import { isAndroid, isIOS } from "@nativescript/core/platform";
 import { EventData } from "@nativescript/core/data/observable";
 import { Color } from "@nativescript/core/color";
+import { Property } from "@nativescript/core/ui/core/properties";
+import { booleanConverter } from "@nativescript/core/ui/core/view-base";
 import { View } from "@nativescript/core/ui/core/view";
 import {
   GridLayout,
@@ -40,7 +42,25 @@ export function getJQuery() {
 (WebView as any).windowOpenedEvent = windowOpenedEvent;
 (WebView as any).windowClosedEvent = windowClosedEvent;
 
+export const previewLinkProperty = new Property<WebView, boolean>({
+  name: "previewLink",
+  valueConverter: booleanConverter,
+});
+
+WebView.prototype[previewLinkProperty.getDefault] = function () {
+  return true;
+};
+
+WebView.prototype[previewLinkProperty.setNative] = function (value: boolean) {
+  if (isIOS) {
+    this._onPreviewLinkChanged(value);
+  }
+};
+
+previewLinkProperty.register(WebView);
+
 WebView.prototype.jsGetHtml = "document.documentElement.outerHTML.toString()";
+WebView.prototype.jsClose = "window.close()";
 
 WebView.prototype.original_createNativeView =
   WebView.prototype.createNativeView;
@@ -61,6 +81,10 @@ WebView.prototype.onPageReady = function (callback: (error?: any) => void) {
 
 WebView.prototype.getHtml = function (): Promise<string> {
   return this.evaluateJavaScript(this.jsGetHtml);
+};
+
+WebView.prototype.close = function (): Promise<void> {
+  return this.evaluateJavaScript(this.jsClose);
 };
 
 WebView.prototype._onCreateWindow = function (
@@ -96,7 +120,7 @@ WebView.prototype._onCreateWindow = function (
   closeButton.borderColor = new Color("transparent");
   closeButton.color = new Color("#fff");
   closeButton.text = "Close";
-  closeButton.once(Button.tapEvent, () => newWebView._onCloseWindow());
+  closeButton.once(Button.tapEvent, () => newWebView.close());
   modalView.addChildAtCell(closeButton, 0, 0);
 
   modalView.once(View.shownModallyEvent, () => {

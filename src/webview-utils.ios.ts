@@ -170,6 +170,11 @@ WebView.prototype.evaluateJavaScript = function (value: string): Promise<any> {
   });
 };
 
+WebView.prototype._onPreviewLinkChanged = function (value: boolean) {
+  const nativeView: WKWebView = this.nativeViewProtected;
+  nativeView.allowsLinkPreview = value;
+};
+
 WebView.prototype._onCreateNativeWindow = function (
   newWebView: WebView,
   params: any

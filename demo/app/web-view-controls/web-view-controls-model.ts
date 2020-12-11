@@ -12,6 +12,6 @@ export class WebViewControlsModel extends Observable {
     }
 
     close() {
-        this.webView._onCloseWindow();
+        this.webView.close();
     }
 }
