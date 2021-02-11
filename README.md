@@ -39,6 +39,15 @@ Add `www` folder to
             ....
 ```
 
+### Using a different path
+
+If you are using a different folder name than `www`, let the plugin know
+
+```
+const plugin = require("nativescript-webview-utils");
+plugin.config.wwwFolder = "YourFolderName";
+```
+
 ## Update minSdkVersion to 19 or higher
 
 Android SDK 19 is required, update `App_Resources/Android/app.gradle`:

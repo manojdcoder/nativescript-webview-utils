@@ -30,10 +30,14 @@ export const windowOpenEvent = "windowOpen";
 export const windowOpenedEvent = "windowOpened";
 export const windowClosedEvent = "windowClosed";
 
+export const config = {
+  wwwFolder: "www",
+};
+
 export function getJQuery() {
   return knownFolders
     .currentApp()
-    .getFolder("www")
+    .getFolder(config.wwwFolder)
     .getFile("jquery.js")
     .readTextSync();
 }
