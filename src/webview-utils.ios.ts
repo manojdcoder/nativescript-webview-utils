@@ -147,7 +147,7 @@ function createNativeView(
 
 WebView.prototype.createNativeView = function () {
   const nativeView = this.wkWebView || createNativeView();
-  nativeView.wkWebView = null;
+  this.wkWebView = null;
   return nativeView;
 };
 
@@ -160,6 +160,17 @@ WebView.prototype.initNativeView = function () {
   this._uiDelegate = PluginWKUIDelegateImpl.initWithOwner(new WeakRef(this));
   this.ios.navigationDelegate = this._delegate;
   this.ios.UIDelegate = this._uiDelegate;
+};
+
+WebView.prototype.disposeNativeView = function () {
+  this._originalDelegate = null;
+  this._uiDelegate = null;
+  this.original_disposeNativeView();
+};
+
+WebView.prototype.onUnloaded = function () {
+  this.ios.UIDelegate = null;
+  this.original_onUnloaded();
 };
 
 WebView.prototype.evaluateJavaScript = function (value: string): Promise<any> {

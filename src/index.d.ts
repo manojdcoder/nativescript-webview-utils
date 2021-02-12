@@ -7,6 +7,8 @@ declare module "@nativescript/core/ui/web-view" {
     private pageReadyCallback: (error?: any) => void;
     private original_createNativeView();
     private original_initNativeView();
+    private original_disposeNativeView();
+    private original_onUnloaded();
     private _onLoadFinished(url: string, error?: string);
     private original_onLoadFinished(url: string, error?: string);
     private injectjQuery();

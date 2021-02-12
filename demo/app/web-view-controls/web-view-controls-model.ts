@@ -4,11 +4,12 @@ import { WebView, LoadEventData } from "@nativescript/core/ui/web-view";
 export class WebViewControlsModel extends Observable {
     constructor(public webView: WebView) {
         super();
-        webView.on(WebView.loadFinishedEvent, this.onLoaded, this);
+        webView.on(WebView.loadStartedEvent, this.onLoadEvent, this);
+        webView.on(WebView.loadFinishedEvent, this.onLoadEvent, this);
     }
 
-    onLoaded(args: LoadEventData) {
-        this.set("url", args.url);
+    onLoadEvent(args: LoadEventData) {
+        console.log(args.eventName + " = " + args.url);
     }
 
     close() {

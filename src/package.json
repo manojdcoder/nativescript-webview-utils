@@ -1,6 +1,6 @@
 {
   "name": "nativescript-webview-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Your awesome NativeScript plugin.",
   "main": "webview-utils",
   "typings": "index.d.ts",

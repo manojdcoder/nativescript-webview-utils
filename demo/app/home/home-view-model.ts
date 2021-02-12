@@ -12,8 +12,9 @@ export class HomeViewModel extends Observable {
                         margin-bottom: 2rem;
                     }
                 </style>
-                <a href='https://www.amazon.ca'>Amazon</a>
-                <a href='http://www.tomcruise.com/'>Tomcruise</a>
+                <a href="https://www.amazon.ca/">Amazon</a>
+                <a href="https://www.footasylum.com">Foot Asylum</a>
+                <a href="http://www.tomcruise.com/">Tomcruise</a>
             `
         );
     }

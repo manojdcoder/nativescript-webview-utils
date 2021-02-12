@@ -86,9 +86,6 @@ export function onWindowOpened(args: WindowedEventData) {
     const { webView, modalView } = args;
     webView.previewLink = false;
 
-    webView.on("loadStarted", onLoadEvent);
-    webView.on("loadFinished", onLoadEvent);
-
     // Modify modal view
     modalView.removeChild(modalView.getViewById("btnClose"));
     const bindingContext = new WebViewControlsModel(webView);

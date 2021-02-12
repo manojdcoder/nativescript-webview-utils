@@ -64,11 +64,19 @@ WebView.prototype[previewLinkProperty.setNative] = function (value: boolean) {
 previewLinkProperty.register(WebView);
 
 WebView.prototype.jsGetHtml = "document.documentElement.outerHTML.toString()";
-WebView.prototype.jsClose = "window.close()";
+WebView.prototype.jsClose = `
+  (() => { 
+    window.close(); 
+    return window.closed;
+  })();
+`;
 
 WebView.prototype.original_createNativeView =
   WebView.prototype.createNativeView;
 WebView.prototype.original_initNativeView = WebView.prototype.initNativeView;
+WebView.prototype.original_disposeNativeView =
+  WebView.prototype.disposeNativeView;
+WebView.prototype.original_onUnloaded = WebView.prototype.onUnloaded;
 
 WebView.prototype.injectjQuery = async function () {
   try {
@@ -88,7 +96,11 @@ WebView.prototype.getHtml = function (): Promise<string> {
 };
 
 WebView.prototype.close = function (): Promise<void> {
-  return this.evaluateJavaScript(this.jsClose);
+  return this.evaluateJavaScript(this.jsClose).then((result) => {
+    if (!result) {
+      this._onCloseWindow();
+    }
+  });
 };
 
 WebView.prototype._onCreateWindow = function (
@@ -151,9 +163,8 @@ WebView.prototype._onCloseWindow = function (params?: any) {
   const modalView: GridLayout = this.modalView;
 
   if (modalView) {
-    modalView.removeChildren();
-    modalView.closeModal();
     this.modalView = null;
+    modalView.closeModal();
 
     const args: EventData = {
       eventName: windowClosedEvent,
