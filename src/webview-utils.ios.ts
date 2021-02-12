@@ -23,24 +23,17 @@ export class PluginWKNavigationDelegateImpl
     navigationAction: WKNavigationAction,
     decisionHandler: any
   ) {
-    const callback = () => {
-      decisionHandler(WKNavigationActionPolicy.Allow + 2);
-    };
-    if (navigationAction.navigationType !== WKNavigationType.Other) {
-      this._origDelegate.webViewDecidePolicyForNavigationActionDecisionHandler(
-        webView,
-        navigationAction,
-        callback
-      );
-    } else {
-      callback();
-    }
+    decisionHandler(WKNavigationActionPolicy.Allow + 2);
   }
 
   webViewDidStartProvisionalNavigation(
     webView: WKWebView,
     navigation: WKNavigation
   ) {
+    const owner = this._origDelegate._owner.get();
+    if (owner) {
+      owner._onLoadStarted(webView.URL.absoluteString, void 0);
+    }
     this._origDelegate.webViewDidStartProvisionalNavigation(
       webView,
       navigation
