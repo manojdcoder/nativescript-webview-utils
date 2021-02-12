@@ -119,10 +119,20 @@ WebView.prototype._onCreateWindow = function (
   }
 
   const modalView = new GridLayout();
-  modalView.backgroundColor = new Color("#000");
+  modalView.backgroundColor = new Color("#FCEA00");
+
+  modalView.addRow(new ItemSpec(1, "auto"));
+  modalView.addRow(new ItemSpec(1, "auto"));
+
   modalView.addRow(new ItemSpec(1, "auto"));
   modalView.addRow(new ItemSpec(1, "star"));
+  modalView.addRow(new ItemSpec(1, "auto"));
+
+  modalView.addRow(new ItemSpec(1, "auto"));
+
+  modalView.addColumn(new ItemSpec(1, "auto"));
   modalView.addColumn(new ItemSpec(1, "star"));
+  modalView.addColumn(new ItemSpec(1, "auto"));
 
   const newWebView = new WebView();
   newWebView.modalView = modalView;
@@ -137,7 +147,7 @@ WebView.prototype._onCreateWindow = function (
   closeButton.color = new Color("#fff");
   closeButton.text = "Close";
   closeButton.once(Button.tapEvent, () => newWebView.close());
-  modalView.addChildAtCell(closeButton, 0, 0);
+  modalView.addChildAtCell(closeButton, 1, 0, 1, 3);
 
   modalView.once(View.shownModallyEvent, () => {
     const args: WindowedEventData = {
