@@ -11,6 +11,6 @@
             <Button text="jQuery" tap="onjQueryButtonClick"></Button>
             <Button text="Window" tap="onWindowButtonClick"></Button>
         </StackLayout>
-        <WebView row="1" id="webView" src="{{ html }}" loadFinished="onLoadFinished" windowOpen="onWindowOpen" windowOpened="onWindowOpened"></WebView>
+        <WebView row="1" id="webView" src="{{ html }}" loadStarted="onLoadEvent" loadFinished="onLoadEvent" windowOpen="onWindowOpen" windowOpened="onWindowOpened"></WebView>
     </GridLayout>
 </Page>

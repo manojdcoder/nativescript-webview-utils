@@ -22,7 +22,7 @@ export function onNavigatingTo(args: NavigatedData) {
     });
 }
 
-export function onLoadFinished(args: LoadEventData) {
+export function onLoadEvent(args: LoadEventData) {
     console.log(args.eventName + " = " + args.url);
 }
 
@@ -85,6 +85,9 @@ export function onWindowOpened(args: WindowedEventData) {
     console.log("Opened window...");
     const { webView, modalView } = args;
     webView.previewLink = false;
+
+    webView.on("loadStarted", onLoadEvent);
+    webView.on("loadFinished", onLoadEvent);
 
     // Modify modal view
     modalView.removeChild(modalView.getViewById("btnClose"));

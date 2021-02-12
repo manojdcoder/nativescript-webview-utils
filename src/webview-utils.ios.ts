@@ -23,13 +23,18 @@ export class PluginWKNavigationDelegateImpl
     navigationAction: WKNavigationAction,
     decisionHandler: any
   ) {
-    this._origDelegate.webViewDecidePolicyForNavigationActionDecisionHandler(
-      webView,
-      navigationAction,
-      () => {
-        decisionHandler(WKNavigationActionPolicy.Allow + 2);
-      }
-    );
+    const callback = () => {
+      decisionHandler(WKNavigationActionPolicy.Allow + 2);
+    };
+    if (navigationAction.navigationType !== WKNavigationType.Other) {
+      this._origDelegate.webViewDecidePolicyForNavigationActionDecisionHandler(
+        webView,
+        navigationAction,
+        callback
+      );
+    } else {
+      callback();
+    }
   }
 
   webViewDidStartProvisionalNavigation(

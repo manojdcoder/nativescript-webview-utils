@@ -3,6 +3,18 @@ import { Observable } from "@nativescript/core/data/observable";
 export class HomeViewModel extends Observable {
     constructor() {
         super();
-        this.set("html", "<a href='https://www.amazon.ca'>Amazon</a>");
+        this.set(
+            "html",
+            `
+                <style type="text/css">
+                    a {
+                        display: block;
+                        margin-bottom: 2rem;
+                    }
+                </style>
+                <a href='https://www.amazon.ca'>Amazon</a>
+                <a href='http://www.tomcruise.com/'>Tomcruise</a>
+            `
+        );
     }
 }
