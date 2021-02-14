@@ -96,11 +96,9 @@ WebView.prototype.getHtml = function (): Promise<string> {
 };
 
 WebView.prototype.close = function (): Promise<void> {
-  return this.evaluateJavaScript(this.jsClose).then((result) => {
-    if (!result) {
-      this._onCloseWindow();
-    }
-  });
+  return this.evaluateJavaScript(this.jsClose).then(() =>
+    this._onCloseWindow()
+  );
 };
 
 WebView.prototype._onCreateWindow = function (
