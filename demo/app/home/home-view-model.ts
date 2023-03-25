@@ -3,6 +3,9 @@ import { Observable } from "@nativescript/core/data/observable";
 export class HomeViewModel extends Observable {
     constructor() {
         super();
+        this.set("mediaPlaybackRequiresGesture", false);
+        this.set("overScrollEnabled", false);
+        this.set("zoomEnabled", false);
         this.set(
             "html",
             `

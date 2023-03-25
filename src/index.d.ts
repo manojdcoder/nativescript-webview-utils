@@ -12,7 +12,10 @@ declare module "@nativescript/core/ui/web-view" {
     private _onLoadFinished(url: string, error?: string);
     private original_onLoadFinished(url: string, error?: string);
     private injectjQuery();
+    private _onMediaPlaybackRequiresGestureChanged(value: boolean);
     private _onPreviewLinkChanged(value: boolean);
+    private _onOverScrollEnabledChanged(value: boolean);
+    private _onZoomEnabledChanged(value: boolean);
     private _onCreateWindow(params: any): any;
     private _onCreateNativeWindow(newWebView: WebView, params: any): any;
     private _onCancelNativeWindow(params: any): any;

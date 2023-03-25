@@ -41,6 +41,7 @@ function initializeWebChromeClient(): void {
 WebView.prototype.createNativeView = function () {
   const nativeView: android.webkit.WebView = this.original_createNativeView();
   nativeView.getSettings().setSupportMultipleWindows(true);
+  nativeView.getSettings().setDisplayZoomControls(this.zoomEnabled);
   return nativeView;
 };
 
@@ -57,6 +58,7 @@ WebView.prototype.initNativeView = function () {
 WebView.prototype.original_onLoadFinished = WebView.prototype._onLoadFinished;
 WebView.prototype._onLoadFinished = function (url: string, error?: string) {
   this.original_onLoadFinished(url, error);
+  this._onZoomEnabledChanged(this.zoomEnabled);
   this.injectjQuery();
 };
 
@@ -71,15 +73,37 @@ WebView.prototype.evaluateJavaScript = function (value: string): Promise<any> {
             if (result.startsWith(`"`)) {
               result = result.substring(1, result.length - 1);
             }
-            result = (org.apache as any).commons.text.StringEscapeUtils.unescapeJava(
-              result
-            );
+            result = (
+              org.apache as any
+            ).commons.text.StringEscapeUtils.unescapeJava(result);
           }
           resolve(result);
         },
       })
     );
   });
+};
+
+WebView.prototype._onMediaPlaybackRequiresGestureChanged = function (
+  value: boolean
+) {
+  const nativeView: android.webkit.WebView = this.nativeViewProtected;
+  nativeView.getSettings().setMediaPlaybackRequiresUserGesture(value);
+};
+
+WebView.prototype._onOverScrollEnabledChanged = function (value: boolean) {
+  const nativeView: android.webkit.WebView = this.nativeViewProtected;
+  nativeView.setOverScrollMode(
+    value
+      ? android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
+      : android.view.View.OVER_SCROLL_NEVER
+  );
+};
+
+WebView.prototype._onZoomEnabledChanged = function (value: boolean) {
+  const nativeView: android.webkit.WebView = this.nativeViewProtected;
+  nativeView.getSettings().setSupportZoom(value);
+  nativeView.getSettings().setBuiltInZoomControls(value);
 };
 
 WebView.prototype._onCreateNativeWindow = function (

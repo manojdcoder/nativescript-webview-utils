@@ -77,6 +77,28 @@ export function onWindowButtonClick(args: EventData) {
     );
 }
 
+export function onPlaybackButtonClick(args: EventData) {
+    const page = <Page>args.object;
+    page.bindingContext.set(
+        "html",
+        `<audio controls autoplay>
+            <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg">
+            <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>`
+    );
+}
+
+export function onOverScrollEnabledButtonClick(args: EventData) {
+    const viewModel: HomeViewModel = (args.object as Page).bindingContext;
+    viewModel.set("overScrollEnabled", !viewModel.get("overScrollEnabled"));
+}
+
+export function onZoomEnabledButtonClick(args: EventData) {
+    const viewModel: HomeViewModel = (args.object as Page).bindingContext;
+    viewModel.set("zoomEnabled", !viewModel.get("zoomEnabled"));
+}
+
 export function onWindowOpen(args: WindowEventData) {
     console.log("Opening window...");
 }

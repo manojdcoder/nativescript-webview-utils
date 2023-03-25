@@ -46,6 +46,21 @@ export function getJQuery() {
 (WebView as any).windowOpenedEvent = windowOpenedEvent;
 (WebView as any).windowClosedEvent = windowClosedEvent;
 
+export const mediaPlaybackRequiresGestureProperty = new Property<WebView, boolean>({
+  name: "mediaPlaybackRequiresGesture",
+  valueConverter: booleanConverter,
+});
+
+WebView.prototype[mediaPlaybackRequiresGestureProperty.getDefault] = function () {
+  return true;
+};
+
+WebView.prototype[mediaPlaybackRequiresGestureProperty.setNative] = function (value: boolean) {
+  this._onMediaPlaybackRequiresGestureChanged(value);
+};
+
+mediaPlaybackRequiresGestureProperty.register(WebView);
+
 export const previewLinkProperty = new Property<WebView, boolean>({
   name: "previewLink",
   valueConverter: booleanConverter,
@@ -62,6 +77,38 @@ WebView.prototype[previewLinkProperty.setNative] = function (value: boolean) {
 };
 
 previewLinkProperty.register(WebView);
+
+export const overScrollEnabledProperty = new Property<WebView, boolean>({
+  name: "overScrollEnabled",
+  valueConverter: booleanConverter,
+});
+
+WebView.prototype[overScrollEnabledProperty.getDefault] = function () {
+  return true;
+};
+
+WebView.prototype[overScrollEnabledProperty.setNative] = function (
+  value: boolean
+) {
+  this._onOverScrollEnabledChanged(value);
+};
+
+overScrollEnabledProperty.register(WebView);
+
+export const zoomEnabledProperty = new Property<WebView, boolean>({
+  name: "zoomEnabled",
+  valueConverter: booleanConverter,
+});
+
+WebView.prototype[zoomEnabledProperty.getDefault] = function () {
+  return true;
+};
+
+WebView.prototype[zoomEnabledProperty.setNative] = function (value: boolean) {
+  this._onZoomEnabledChanged(value);
+};
+
+zoomEnabledProperty.register(WebView);
 
 WebView.prototype.jsGetHtml = "document.documentElement.outerHTML.toString()";
 WebView.prototype.jsClose = `

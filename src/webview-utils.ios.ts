@@ -5,7 +5,8 @@ export * from "./webview-utils.common";
 
 export class PluginWKNavigationDelegateImpl
   extends NSObject
-  implements WKNavigationDelegate {
+  implements WKNavigationDelegate
+{
   public static ObjCProtocols = [WKNavigationDelegate];
 
   private _origDelegate: any;
@@ -45,6 +46,7 @@ export class PluginWKNavigationDelegateImpl
     if (!webView.loading) {
       const owner = this._origDelegate._owner.get();
       if (owner) {
+        owner._onZoomEnabledChanged(owner.zoomEnabled);
         owner.injectjQuery();
       }
     }
@@ -118,11 +120,12 @@ function createNativeView(
   const jScript =
     getJQuery() +
     "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'initial-scale=1.0'); document.getElementsByTagName('head')[0].appendChild(meta);";
-  const wkUScript = WKUserScript.alloc().initWithSourceInjectionTimeForMainFrameOnly(
-    jScript,
-    WKUserScriptInjectionTime.AtDocumentEnd,
-    true
-  );
+  const wkUScript =
+    WKUserScript.alloc().initWithSourceInjectionTimeForMainFrameOnly(
+      jScript,
+      WKUserScriptInjectionTime.AtDocumentEnd,
+      true
+    );
 
   if (!configuration.userContentController) {
     const wkUController = WKUserContentController.new();
@@ -131,6 +134,7 @@ function createNativeView(
   configuration.userContentController.addUserScript(wkUScript);
 
   configuration.preferences.setValueForKey(true, "allowFileAccessFromFileURLs");
+  configuration.mediaPlaybackRequiresUserAction = this.mediaPlaybackRequiresGesture;
 
   return new WKWebView({
     frame: CGRectZero,
@@ -139,7 +143,7 @@ function createNativeView(
 }
 
 WebView.prototype.createNativeView = function () {
-  const nativeView = this.wkWebView || createNativeView();
+  const nativeView = this.wkWebView || createNativeView.call(this);
   this.wkWebView = null;
   return nativeView;
 };
@@ -179,9 +183,27 @@ WebView.prototype.evaluateJavaScript = function (value: string): Promise<any> {
   });
 };
 
+WebView.prototype._onMediaPlaybackRequiresGestureChanged = function (value: boolean) {
+  // This property can not be updated, must be set at creation
+};
+
 WebView.prototype._onPreviewLinkChanged = function (value: boolean) {
   const nativeView: WKWebView = this.nativeViewProtected;
   nativeView.allowsLinkPreview = value;
+};
+
+WebView.prototype._onOverScrollEnabledChanged = function (value: boolean) {
+  const nativeView: WKWebView = this.nativeViewProtected;
+  nativeView.scrollView.bounces = value;
+};
+
+WebView.prototype._onZoomEnabledChanged = function (value: boolean) {
+  const content = value
+    ? "width=device-width, initial-scale=1.0, user-scalable=yes"
+    : "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no";
+  this.evaluateJavaScript(
+    `document.querySelector("meta[name=viewport]")?.setAttribute("content", "${content}")`
+  );
 };
 
 WebView.prototype._onCreateNativeWindow = function (

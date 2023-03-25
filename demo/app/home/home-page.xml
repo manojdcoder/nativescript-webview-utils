@@ -6,11 +6,15 @@
     </ActionBar>
 
     <GridLayout rows="auto,*">
-        <StackLayout row="0">
-            <Button text="Get HTML" tap="onGetHtmlButtonClick"></Button>
-            <Button text="jQuery" tap="onjQueryButtonClick"></Button>
-            <Button text="Window" tap="onWindowButtonClick"></Button>
-        </StackLayout>
-        <WebView row="1" id="webView" src="{{ html }}" loadStarted="onLoadEvent" loadFinished="onLoadEvent" windowOpen="onWindowOpen" windowOpened="onWindowOpened"></WebView>
+        <WrapLayout row="0" orientation="horizontal">
+            <Button text="Get HTML" tap="onGetHtmlButtonClick" />
+            <Button text="jQuery" tap="onjQueryButtonClick" />
+            <Button text="Window" tap="onWindowButtonClick" />
+            <Button text="Playback" tap="onPlaybackButtonClick" />
+            <Button text="{{ (overScrollEnabled) ? 'Over scroll enabled' : 'Over scroll disabled' }}" tap="onOverScrollEnabledButtonClick" />
+            <Button text="{{ (zoomEnabled) ? 'Zoom enabled' : 'Zoom disabled' }}" tap="onZoomEnabledButtonClick" />
+            <Button text="{{ (mediaPlaybackRequiresGesture) ? 'Playback gesture enabled' : 'Playback gesture disabled' }}" />
+        </WrapLayout>
+        <WebView row="1" id="webView" src="{{ html }}" mediaPlaybackRequiresGesture="{{ mediaPlaybackRequiresGesture }}" overScrollEnabled="{{ overScrollEnabled }}" zoomEnabled="{{ zoomEnabled }}" loadStarted="onLoadEvent" loadFinished="onLoadEvent" windowOpen="onWindowOpen" windowOpened="onWindowOpened"></WebView>
     </GridLayout>
 </Page>
