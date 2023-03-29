@@ -66,9 +66,12 @@ android {
 
 ## API
 
-| Property    | Description                               |
-| ----------- | ----------------------------------------- |
-| previewLink | Enable / disable link preview (iOS only). |
+| Property                     | Description                                                          |
+| ---------------------------- | -------------------------------------------------------------------- |
+| mediaPlaybackRequiresGesture | When `true`, allows the web page to auto play audio/video upon load. |
+| previewLink                  | Enable / disable link preview (iOS only).                            |
+| overScrollEnabled            | Enable / disable elastic effect on scrollable containers.            |
+| zoomEnabled                  | Enable / disable zoom (must be set upon creation).                   |
 
 | Function                                  | Description                                                                      |
 | ----------------------------------------- | -------------------------------------------------------------------------------- |
