@@ -1,3 +1,5 @@
+import { Orientation } from "./webview-utils.common";
+
 declare module "@nativescript/core/ui/web-view" {
   interface WebView {
     private jsGetHtml: string;
@@ -14,6 +16,7 @@ declare module "@nativescript/core/ui/web-view" {
     private injectjQuery();
     private _onMediaPlaybackRequiresGestureChanged(value: boolean);
     private _onPreviewLinkChanged(value: boolean);
+    private _onOrientationChanged(value: Orientation);
     private _onOverScrollEnabledChanged(value: boolean);
     private _onZoomEnabledChanged(value: boolean);
     private _onCreateWindow(params: any): any;

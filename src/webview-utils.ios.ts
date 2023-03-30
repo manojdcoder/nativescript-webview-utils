@@ -1,4 +1,5 @@
-import { getJQuery } from "./webview-utils.common";
+import { getJQuery, Orientation } from "./webview-utils.common";
+import { device } from "@nativescript/core/platform";
 import { WebView } from "@nativescript/core/ui/web-view";
 
 export * from "./webview-utils.common";
@@ -134,7 +135,8 @@ function createNativeView(
   configuration.userContentController.addUserScript(wkUScript);
 
   configuration.preferences.setValueForKey(true, "allowFileAccessFromFileURLs");
-  configuration.mediaPlaybackRequiresUserAction = this.mediaPlaybackRequiresGesture;
+  configuration.mediaPlaybackRequiresUserAction =
+    this.mediaPlaybackRequiresGesture;
 
   return new WKWebView({
     frame: CGRectZero,
@@ -183,13 +185,44 @@ WebView.prototype.evaluateJavaScript = function (value: string): Promise<any> {
   });
 };
 
-WebView.prototype._onMediaPlaybackRequiresGestureChanged = function (value: boolean) {
+WebView.prototype._onMediaPlaybackRequiresGestureChanged = function (
+  value: boolean
+) {
   // This property can not be updated, must be set at creation
 };
 
 WebView.prototype._onPreviewLinkChanged = function (value: boolean) {
   const nativeView: WKWebView = this.nativeViewProtected;
   nativeView.allowsLinkPreview = value;
+};
+
+WebView.prototype._onOrientationChanged = function (value: Orientation) {
+  const webView: WebView = this;
+  const viewController: UIViewController =
+    webView.page && webView.page.viewController;
+
+  if (viewController) {
+    let value1 = UIInterfaceOrientationMask.All;
+    let value2 =
+      UIInterfaceOrientation.Portrait |
+      UIInterfaceOrientation.PortraitUpsideDown |
+      UIInterfaceOrientation.LandscapeLeft |
+      UIInterfaceOrientation.LandscapeRight;
+
+    if (value === Orientation.Portrait) {
+      value1 = UIInterfaceOrientationMask.Portrait;
+      value2 =
+        UIInterfaceOrientation.Portrait |
+        UIInterfaceOrientation.PortraitUpsideDown;
+    } else if (value === Orientation.Landscape) {
+      value1 = UIInterfaceOrientationMask.Landscape;
+      value2 =
+        UIInterfaceOrientation.LandscapeLeft |
+        UIInterfaceOrientation.LandscapeRight;
+    }
+
+    updateOrientation(viewController, value1, value2);
+  }
 };
 
 WebView.prototype._onOverScrollEnabledChanged = function (value: boolean) {
@@ -219,3 +252,42 @@ WebView.prototype._onCreateNativeWindow = function (
 WebView.prototype._onCancelNativeWindow = function (params: any): WKWebView {
   return null;
 };
+
+function updateOrientation(
+  viewController: UIViewController,
+  value1: UIInterfaceOrientationMask,
+  value2: UIInterfaceOrientation
+) {
+  let proto = viewController;
+  do {
+    proto = Object.getPrototypeOf(proto);
+  } while (
+    proto !== null &&
+    !proto.hasOwnProperty("supportedInterfaceOrientations")
+  );
+
+  Object.defineProperty(proto, "supportedInterfaceOrientations", {
+    get: function () {
+      return value1;
+    },
+    enumerable: true,
+    configurable: true,
+  });
+
+  Object.defineProperty(proto, "preferredInterfaceOrientationForPresentation", {
+    get: function () {
+      return value2;
+    },
+    enumerable: true,
+    configurable: true,
+  });
+
+  if (
+    parseInt(device.osVersion) >= 16 &&
+    (viewController as any).setNeedsUpdateOfSupportedInterfaceOrientations
+  ) {
+    (viewController as any).setNeedsUpdateOfSupportedInterfaceOrientations();
+  } else if ((viewController as any).attemptRotationToDeviceOrientation) {
+    (viewController as any).attemptRotationToDeviceOrientation();
+  }
+}

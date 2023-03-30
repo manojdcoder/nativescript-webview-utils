@@ -15,6 +15,6 @@
             <Button text="{{ (zoomEnabled) ? 'Zoom enabled' : 'Zoom disabled' }}" tap="onZoomEnabledButtonClick" />
             <Button text="{{ (mediaPlaybackRequiresGesture) ? 'Playback gesture enabled' : 'Playback gesture disabled' }}" />
         </WrapLayout>
-        <WebView row="1" id="webView" src="{{ html }}" mediaPlaybackRequiresGesture="{{ mediaPlaybackRequiresGesture }}" overScrollEnabled="{{ overScrollEnabled }}" zoomEnabled="{{ zoomEnabled }}" loadStarted="onLoadEvent" loadFinished="onLoadEvent" windowOpen="onWindowOpen" windowOpened="onWindowOpened"></WebView>
+        <WebView row="1" id="webView" src="{{ html }}" mediaPlaybackRequiresGesture="{{ mediaPlaybackRequiresGesture }}" orientation="{{ orientation }}" overScrollEnabled="{{ overScrollEnabled }}" zoomEnabled="{{ zoomEnabled }}" loadStarted="onLoadEvent" loadFinished="onLoadEvent" windowOpen="onWindowOpen" windowOpened="onWindowOpened"></WebView>
     </GridLayout>
 </Page>

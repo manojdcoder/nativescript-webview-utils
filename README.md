@@ -68,6 +68,7 @@ android {
 
 | Property                     | Description                                                          |
 | ---------------------------- | -------------------------------------------------------------------- |
+| orientation                  | Orientation.Default / Orientation.Portrait / Orientation.Landscape.  |
 | mediaPlaybackRequiresGesture | When `true`, allows the web page to auto play audio/video upon load. |
 | previewLink                  | Enable / disable link preview (iOS only).                            |
 | overScrollEnabled            | Enable / disable elastic effect on scrollable containers.            |

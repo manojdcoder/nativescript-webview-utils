@@ -12,6 +12,12 @@ import { Button } from "@nativescript/core/ui/button";
 import { WebView } from "@nativescript/core/ui/web-view";
 import { knownFolders } from "@nativescript/core/file-system";
 
+export enum Orientation {
+  Default,
+  Portrait,
+  Landscape,
+}
+
 export interface WindowEventData {
   eventName: string;
   object: WebView;
@@ -46,16 +52,22 @@ export function getJQuery() {
 (WebView as any).windowOpenedEvent = windowOpenedEvent;
 (WebView as any).windowClosedEvent = windowClosedEvent;
 
-export const mediaPlaybackRequiresGestureProperty = new Property<WebView, boolean>({
+export const mediaPlaybackRequiresGestureProperty = new Property<
+  WebView,
+  boolean
+>({
   name: "mediaPlaybackRequiresGesture",
   valueConverter: booleanConverter,
 });
 
-WebView.prototype[mediaPlaybackRequiresGestureProperty.getDefault] = function () {
-  return true;
-};
+WebView.prototype[mediaPlaybackRequiresGestureProperty.getDefault] =
+  function () {
+    return true;
+  };
 
-WebView.prototype[mediaPlaybackRequiresGestureProperty.setNative] = function (value: boolean) {
+WebView.prototype[mediaPlaybackRequiresGestureProperty.setNative] = function (
+  value: boolean
+) {
   this._onMediaPlaybackRequiresGestureChanged(value);
 };
 
@@ -77,6 +89,20 @@ WebView.prototype[previewLinkProperty.setNative] = function (value: boolean) {
 };
 
 previewLinkProperty.register(WebView);
+
+export const orientationProperty = new Property<WebView, Orientation>({
+  name: "orientation",
+});
+
+WebView.prototype[orientationProperty.getDefault] = function () {
+  return true;
+};
+
+WebView.prototype[orientationProperty.setNative] = function (value: boolean) {
+  this._onOrientationChanged(value);
+};
+
+orientationProperty.register(WebView);
 
 export const overScrollEnabledProperty = new Property<WebView, boolean>({
   name: "overScrollEnabled",

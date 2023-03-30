@@ -1,5 +1,7 @@
+import { android as application } from "@nativescript/core/application";
 import { View } from "@nativescript/core/ui/core/view";
 import { WebView } from "@nativescript/core/ui/web-view";
+import { Orientation } from "./webview-utils.common";
 
 export * from "./webview-utils.common";
 
@@ -89,6 +91,21 @@ WebView.prototype._onMediaPlaybackRequiresGestureChanged = function (
 ) {
   const nativeView: android.webkit.WebView = this.nativeViewProtected;
   nativeView.getSettings().setMediaPlaybackRequiresUserGesture(value);
+};
+
+WebView.prototype._onOrientationChanged = function (value: Orientation) {
+  const activity: androidx.appcompat.app.AppCompatActivity =
+    application.foregroundActivity;
+
+  let orientation =
+    android.content.pm.ActivityInfo.SCREEN_ORIENTATION_FULL_USER;
+  if (value === Orientation.Portrait) {
+    orientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
+  } else if (value === Orientation.Landscape) {
+    orientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
+  }
+
+  activity.setRequestedOrientation(orientation);
 };
 
 WebView.prototype._onOverScrollEnabledChanged = function (value: boolean) {

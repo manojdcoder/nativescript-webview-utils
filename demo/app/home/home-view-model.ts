@@ -1,9 +1,11 @@
 import { Observable } from "@nativescript/core/data/observable";
+import { Orientation } from "nativescript-webview-utils";
 
 export class HomeViewModel extends Observable {
     constructor() {
         super();
         this.set("mediaPlaybackRequiresGesture", false);
+        this.set("orientation", Orientation.Portrait);
         this.set("overScrollEnabled", false);
         this.set("zoomEnabled", false);
         this.set(
