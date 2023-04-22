@@ -1,6 +1,7 @@
 import { getJQuery, Orientation } from "./webview-utils.common";
 import { device } from "@nativescript/core/platform";
 import { WebView } from "@nativescript/core/ui/web-view";
+import { alert, confirm, prompt } from "@nativescript/core/ui/dialogs";
 
 export * from "./webview-utils.common";
 
@@ -105,6 +106,46 @@ export class PluginWKUIDelegateImpl extends NSObject implements WKUIDelegate {
       }) as WKWebView;
     }
     return null;
+  }
+
+  webViewRunJavaScriptAlertPanelWithMessageInitiatedByFrameCompletionHandler(
+    webView: WKWebView,
+    message: string,
+    frame: WKFrameInfo,
+    completionHandler: () => void
+  ): void {
+    alert(message)
+      .catch((err) => console.log(err))
+      .then(() => completionHandler());
+  }
+
+  webViewRunJavaScriptConfirmPanelWithMessageInitiatedByFrameCompletionHandler(
+    webView: WKWebView,
+    message: string,
+    frame: WKFrameInfo,
+    completionHandler: (p1: boolean) => void
+  ): void {
+    confirm(message)
+      .catch((err) => {
+        console.log(err);
+        return false;
+      })
+      .then((result) => completionHandler(result));
+  }
+
+  webViewRunJavaScriptTextInputPanelWithPromptDefaultTextInitiatedByFrameCompletionHandler(
+    webView: WKWebView,
+    message: string,
+    defaultText: string,
+    frame: WKFrameInfo,
+    completionHandler: (p1: string) => void
+  ): void {
+    prompt(message, defaultText)
+      .catch((err) => {
+        console.log(err);
+        return { text: "" };
+      })
+      .then((result) => completionHandler(result.text));
   }
 
   webViewDidClose(webView: WKWebView) {
