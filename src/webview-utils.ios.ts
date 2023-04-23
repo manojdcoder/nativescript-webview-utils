@@ -108,13 +108,20 @@ export class PluginWKUIDelegateImpl extends NSObject implements WKUIDelegate {
     return null;
   }
 
+  webViewDidClose(webView: WKWebView) {
+    const owner = this._owner.get();
+    if (owner) {
+      owner._onCloseWindow({ webView });
+    }
+  }
+
   webViewRunJavaScriptAlertPanelWithMessageInitiatedByFrameCompletionHandler(
     webView: WKWebView,
     message: string,
     frame: WKFrameInfo,
     completionHandler: () => void
   ): void {
-    alert(message)
+    alert({ title: "", message: message || " ", okButtonText: "OK" })
       .catch((err) => console.log(err))
       .then(() => completionHandler());
   }
@@ -125,7 +132,12 @@ export class PluginWKUIDelegateImpl extends NSObject implements WKUIDelegate {
     frame: WKFrameInfo,
     completionHandler: (p1: boolean) => void
   ): void {
-    confirm(message)
+    confirm({
+      title: "",
+      message: message || " ",
+      okButtonText: "OK",
+      cancelButtonText: "Cancel",
+    })
       .catch((err) => {
         console.log(err);
         return false;
@@ -140,19 +152,18 @@ export class PluginWKUIDelegateImpl extends NSObject implements WKUIDelegate {
     frame: WKFrameInfo,
     completionHandler: (p1: string) => void
   ): void {
-    prompt(message, defaultText)
+    prompt({
+      title: "",
+      message: message || " ",
+      defaultText: defaultText,
+      okButtonText: "OK",
+      cancelButtonText: "Cancel",
+    })
       .catch((err) => {
         console.log(err);
-        return { text: "" };
+        return { result: false, text: "" };
       })
       .then((result) => completionHandler(result.text));
-  }
-
-  webViewDidClose(webView: WKWebView) {
-    const owner = this._owner.get();
-    if (owner) {
-      owner._onCloseWindow({ webView });
-    }
   }
 }
 

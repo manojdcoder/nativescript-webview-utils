@@ -1,6 +1,7 @@
 import { android as application } from "@nativescript/core/application";
 import { View } from "@nativescript/core/ui/core/view";
 import { WebView } from "@nativescript/core/ui/web-view";
+import { alert, confirm, prompt } from "@nativescript/core/ui/dialogs";
 import { Orientation } from "./webview-utils.common";
 
 export * from "./webview-utils.common";
@@ -29,6 +30,62 @@ function initializeWebChromeClient(): void {
         });
       }
       return false;
+    },
+    onJsAlert: function (
+      view: android.webkit.WebView,
+      url: string,
+      message: string,
+      jsResult: android.webkit.JsResult
+    ): boolean {
+      alert({ title: "", message: message || " ", okButtonText: "OK" })
+        .catch((err) => console.log(err))
+        .then(() => jsResult.confirm());
+
+      return true;
+    },
+    onJsConfirm: function (
+      view: android.webkit.WebView,
+      url: string,
+      message: string,
+      jsResult: android.webkit.JsResult
+    ): boolean {
+      confirm({
+        title: "",
+        message: message || " ",
+        okButtonText: "OK",
+        cancelButtonText: "Cancel",
+      })
+        .catch((err) => {
+          console.log(err);
+          return false;
+        })
+        .then((result) => (result ? jsResult.confirm() : jsResult.cancel()));
+
+      return true;
+    },
+    onJsPrompt: function (
+      view: android.webkit.WebView,
+      url: string,
+      message: string,
+      defaultValue: string,
+      jsResult: android.webkit.JsPromptResult
+    ): boolean {
+      prompt({
+        title: "",
+        message: message || " ",
+        defaultText: defaultValue,
+        okButtonText: "OK",
+        cancelButtonText: "Cancel",
+      })
+        .catch((err) => {
+          console.log(err);
+          return { result: false, text: "" };
+        })
+        .then((result) =>
+          result.result ? jsResult.confirm(result.text) : jsResult.cancel()
+        );
+
+      return true;
     },
     onCloseWindow: function (view: android.webkit.WebView) {
       const owner = this.owner;
@@ -100,9 +157,11 @@ WebView.prototype._onOrientationChanged = function (value: Orientation) {
   let orientation =
     android.content.pm.ActivityInfo.SCREEN_ORIENTATION_FULL_USER;
   if (value === Orientation.Portrait) {
-    orientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
+    orientation =
+      android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
   } else if (value === Orientation.Landscape) {
-    orientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
+    orientation =
+      android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
   }
 
   activity.setRequestedOrientation(orientation);
