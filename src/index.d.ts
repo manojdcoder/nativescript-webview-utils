@@ -6,6 +6,7 @@ declare module "@nativescript/core/ui/web-view" {
     private jsClose: string;
     private modalView: any;
     private wkWebView: any;
+    private isZoomEnabled: boolean;
     private pageReadyCallback: (error?: any) => void;
     private original_createNativeView();
     private original_initNativeView();

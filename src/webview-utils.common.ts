@@ -126,11 +126,14 @@ export const zoomEnabledProperty = new Property<WebView, boolean>({
   valueConverter: booleanConverter,
 });
 
+WebView.prototype.isZoomEnabled = true;
+
 WebView.prototype[zoomEnabledProperty.getDefault] = function () {
-  return true;
+  return this.isZoomEnabled;
 };
 
 WebView.prototype[zoomEnabledProperty.setNative] = function (value: boolean) {
+  this.isZoomEnabled = value;
   this._onZoomEnabledChanged(value);
 };
 

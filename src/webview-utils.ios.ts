@@ -48,7 +48,7 @@ export class PluginWKNavigationDelegateImpl
     if (!webView.loading) {
       const owner = this._origDelegate._owner.get();
       if (owner) {
-        owner._onZoomEnabledChanged(owner.zoomEnabled);
+        owner._onZoomEnabledChanged(owner.isZoomEnabled);
         owner.injectjQuery();
       }
     }

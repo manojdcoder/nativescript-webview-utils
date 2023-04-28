@@ -100,7 +100,7 @@ function initializeWebChromeClient(): void {
 WebView.prototype.createNativeView = function () {
   const nativeView: android.webkit.WebView = this.original_createNativeView();
   nativeView.getSettings().setSupportMultipleWindows(true);
-  nativeView.getSettings().setDisplayZoomControls(this.zoomEnabled);
+  nativeView.getSettings().setDisplayZoomControls(this.isZoomEnabled);
   return nativeView;
 };
 
@@ -117,7 +117,7 @@ WebView.prototype.initNativeView = function () {
 WebView.prototype.original_onLoadFinished = WebView.prototype._onLoadFinished;
 WebView.prototype._onLoadFinished = function (url: string, error?: string) {
   this.original_onLoadFinished(url, error);
-  this._onZoomEnabledChanged(this.zoomEnabled);
+  this._onZoomEnabledChanged(this.isZoomEnabled);
   this.injectjQuery();
 };
 
